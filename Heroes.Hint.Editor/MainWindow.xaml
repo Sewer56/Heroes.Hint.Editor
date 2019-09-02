@@ -1,0 +1,141 @@
+﻿<default:ReloadedWindow x:Class="Heroes.Hint.Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Heroes.Hint.Editor"
+        xmlns:default="clr-namespace:Reloaded.WPF.Theme.Default;assembly=Reloaded.WPF.Theme.Default"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:utilities="clr-namespace:Reloaded.WPF.Utilities;assembly=Reloaded.WPF"
+        xmlns:enum="clr-namespace:Heroes.Hint.Library.Structure.Heroes.Enum;assembly=Heroes.Hint.Library"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+        SizeToContent="Height"
+        Height="Auto" 
+        Width="500"
+        Style="{DynamicResource ReloadedWindow}">
+    <Grid x:Name="Content" DataContext="{Binding RealViewModel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type default:ReloadedWindow}}}">
+
+        <Grid.Resources>
+            <system:Double x:Key="ItemHeight">24</system:Double>
+
+            <CollectionViewSource x:Key="EntriesSource" 
+                                  Source="{Binding Entries, UpdateSourceTrigger=PropertyChanged}" 
+                                  Filter="EntriesSource_Filter" 
+                                  IsLiveFilteringRequested="True"/>
+
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Action Bar -->
+        <Menu Grid.Row="0">
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel HorizontalAlignment="Stretch" LastChildFill="False"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+
+            <MenuItem Header="Open" Click="Open_Click" />
+            <MenuItem Header="Save" Click="Save_Click"    />
+            <MenuItem Header="Save As" Click="SaveAs_Click" />
+
+            <MenuItem Header="Add"    Click="Add_Click"    DockPanel.Dock="Right" />
+            <MenuItem Header="Remove" Click="Remove_Click" DockPanel.Dock="Right" />
+        </Menu>
+
+        <!-- Page Content -->
+        <Grid Grid.Row="1" Margin="{DynamicResource PanelMargin}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Filter -->
+            <TextBox Margin="{DynamicResource CommonItemCombinedMargin}" 
+                     Text="{Binding TextFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource TextboxWithPlaceholder}"
+                     Tag="Filter by Text"/>
+
+            <!-- Selector -->
+            <ComboBox Margin="{DynamicResource CommonItemCombinedMargin}" 
+                      Grid.Row="1" 
+                      SelectedItem="{Binding CurrentEntry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding Source={StaticResource EntriesSource}}" >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=AsString, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <!-- Item Properties -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Character" DockPanel.Dock="Left" Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+                    <TextBlock Text="Hint Number" DockPanel.Dock="Left" Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+                    <TextBlock Text="Text" DockPanel.Dock="Left" Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+                    <TextBlock Text="Show Duration" DockPanel.Dock="Left" Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+                    <TextBlock Text="Next Hint Index" DockPanel.Dock="Left" Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <ComboBox SelectedItem="{Binding CurrentEntry.Character, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              ItemsSource="{Binding Source={utilities:EnumBindingSource EnumType={x:Type enum:Character}}}"
+                              Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+
+                    <TextBox  Text="{Binding CurrentEntry.HintNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+
+                    <TextBox  Text="{Binding CurrentEntry.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+
+                    <TextBox  Text="{Binding CurrentEntry.ShowDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+
+                    <TextBox  Text="{Binding CurrentEntry.NextHint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              Margin="{DynamicResource CommonItemCombinedMargin}" Height="{DynamicResource ItemHeight}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!-- Statusbar -->
+        <StatusBar Grid.Row="2" HorizontalContentAlignment="Right">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <StatusBarItem Grid.Column="0">
+                <TextBlock HorizontalAlignment="Right" Text="{Binding CurrentFileLocation, UpdateSourceTrigger=PropertyChanged, FallbackValue='No File Opened'}"/>
+            </StatusBarItem>
+
+            <StatusBarItem Grid.Column="1">
+                <Separator/>
+            </StatusBarItem>
+
+            <StatusBarItem Grid.Column="2">
+                <TextBlock HorizontalAlignment="Right" Text="{Binding CurrentIndexText, UpdateSourceTrigger=PropertyChanged, FallbackValue='Current Index: -1/0'}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</default:ReloadedWindow>
