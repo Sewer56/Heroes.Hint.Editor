@@ -13,6 +13,7 @@
         Cream,
         Espio,
         Vector,
-        Charmy
+        Charmy,
+        Boss
     }
 }
