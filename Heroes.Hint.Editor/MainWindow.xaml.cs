@@ -68,7 +68,7 @@ namespace Heroes.Hint.Editor
             }
 
             if ((bool) saveDialog.ShowDialog())
-                RealViewModel.OpenFile(saveDialog.FileName);
+                RealViewModel.SaveFile(saveDialog.FileName);
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
