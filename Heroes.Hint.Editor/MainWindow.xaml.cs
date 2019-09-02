@@ -35,12 +35,18 @@ namespace Heroes.Hint.Editor
 
         public MainWindow()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             RealViewModel = new MainPageViewModel();
             RealViewModel.PropertyChanged += RealViewModelOnPropertyChanged;
 
             InitializeComponent();
             _manipulator = new ResourceManipulator((FrameworkElement) this.Content);
             _source = _manipulator.Get<CollectionViewSource>(NameOfItemsSource);
+        }
+
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show($"{((Exception) e.ExceptionObject).Message}, {((Exception) e.ExceptionObject).StackTrace}");
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
